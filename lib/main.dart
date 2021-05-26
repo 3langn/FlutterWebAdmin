@@ -5,7 +5,7 @@ import 'package:university_admin/providers/dataMajorsProvider.dart';
 import 'package:university_admin/providers/dataUniversityProvider.dart';
 import 'package:university_admin/screens/add_majors.dart';
 import 'package:university_admin/screens/add_university.dart';
-import 'package:university_admin/screens/home.dart';
+import 'package:university_admin/screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           // accentColor: Colors.black54,
           iconTheme: IconThemeData(
-            color: Colors.white,
+            color: Colors.black54,
           ),
           appBarTheme: AppBarTheme(
             color: Colors.white,
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           ),
           canvasColor: Colors.white,
         ),
-        home: Home(),
+        home: MainScreen(),
         routes: {
           AddUniversity.routeName: (context) => AddUniversity(),
           AddMajors.routeName: (context) => AddMajors(),

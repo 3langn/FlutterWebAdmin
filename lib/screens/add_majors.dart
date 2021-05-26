@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:university_admin/bloc.navigation_bloc/navigation_bloc.dart';
 import 'package:university_admin/providers/dataMajorsProvider.dart';
 
-class AddMajors extends StatefulWidget {
+class AddMajors extends StatefulWidget with NavigationStates {
   static const routeName = 'add-majors-screen';
   const AddMajors({Key? key}) : super(key: key);
 

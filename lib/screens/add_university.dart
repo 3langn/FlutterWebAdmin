@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:university_admin/bloc.navigation_bloc/navigation_bloc.dart';
 import 'package:university_admin/providers/dataMajorsProvider.dart';
 import 'package:university_admin/services/majors/custom_search_majors.dart';
 import 'package:university_admin/services/majors/input_majors.dart';
 
-class AddUniversity extends StatefulWidget {
+class AddUniversity extends StatefulWidget with NavigationStates{
   static const routeName = 'Add-university-screen';
   const AddUniversity({Key? key}) : super(key: key);
 
