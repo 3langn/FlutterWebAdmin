@@ -43,10 +43,10 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
           itemBuilder: (context, index) {
             return query.isNotEmpty
                 ? ListTile(
-                    onTap: () => buildShowInputMajors(
-                      scaffoldCtx!,
-                      suggestList[index],
-                    ),
+                    onTap: () {
+                      print('aaaaaaaaaaaaa');
+                      buildShowInputMajors(scaffoldCtx!, itemList[index]);
+                    },
                     title: Text(suggestList[index]
                         // itemList[index]['majors'],
                         ),
@@ -54,7 +54,7 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                 : Container();
           },
           itemCount: suggestList.length > 5 ? 5 : suggestList.length,
-          separatorBuilder: (BuildContext context, int index) {
+          separatorBuilder: (context, index) {
             return Divider(
               height: 3,
             );
@@ -91,7 +91,7 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
 
     return showModalBottomSheet(
       context: scaffoldCtx,
-      builder: (context) {
+      builder: (scaffoldCtx) {
         final focus = FocusNode();
         return Container(
           padding: EdgeInsets.all(20),
@@ -102,7 +102,7 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                 children: [
                   Text(
                     'Điền thông tin ngành',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(scaffoldCtx).textTheme.headline6,
                   ),
                   Text('Tên Ngành : $nameMajors'),
                   TextFormField(

@@ -10,10 +10,8 @@ class DataMajorsProvider extends ChangeNotifier {
 
   Future<void> getData() async {
     try {
-      final docRef = await FirebaseFirestore.instance
-          .collection('listMajors')
-          .limit(10)
-          .get();
+      final docRef =
+          await FirebaseFirestore.instance.collection('listMajors').get();
       docRef.docs.forEach((element) {
         _listDataMajors.add(element['majors']);
       });

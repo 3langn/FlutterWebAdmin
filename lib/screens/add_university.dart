@@ -7,7 +7,7 @@ import 'package:university_admin/providers/dataMajorsProvider.dart';
 import 'package:university_admin/services/majors/custom_search_majors.dart';
 import 'package:university_admin/services/majors/input_majors.dart';
 
-class AddUniversity extends StatefulWidget with NavigationStates{
+class AddUniversity extends StatefulWidget with NavigationStates {
   static const routeName = 'Add-university-screen';
   const AddUniversity({Key? key}) : super(key: key);
 
@@ -60,18 +60,20 @@ class _AddUniversityState extends State<AddUniversity> {
     await FirebaseFirestore.instance
         .collection('ListUniversity')
         .add(university);
+    print('a');
   }
 
   @override
   void initState() {
+    Provider.of<DataMajorsProvider>(context, listen: false).getData();
     final pvd = Provider.of<DataMajorsProvider>(context, listen: false);
-    pvd.getData();
-    _listDataMajors = pvd.listSelectedMajors.map((e) => e.name).toList();
+    _listDataMajors = pvd.listDataMajors;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(_listDataMajors);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -99,7 +101,7 @@ class _AddUniversityState extends State<AddUniversity> {
                   delegate: SearchMajorsDelegate(
                     itemList: _listDataMajors,
                     hintText: 'Chọn ngành',
-                    scaffoldCtx: _scaffoldKey.currentContext,
+                    scaffoldCtx: context,
                   ),
                 ),
                 _buildListSelectedMajors(),
