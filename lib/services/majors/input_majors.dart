@@ -38,11 +38,11 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
     return Card(
       child: Container(
         color: Colors.grey[100],
-        child: ListView.separated(
+        child:query.isNotEmpty? ListView.separated(
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            return query.isNotEmpty
-                ? ListTile(
+            return
+                ListTile(
                     onTap: () {
                       print('aaaaaaaaaaaaa');
                       buildShowInputMajors(scaffoldCtx!, itemList[index]);
@@ -50,8 +50,7 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                     title: Text(suggestList[index]
                         // itemList[index]['majors'],
                         ),
-                  )
-                : Container();
+                  );
           },
           itemCount: suggestList.length > 5 ? 5 : suggestList.length,
           separatorBuilder: (context, index) {
