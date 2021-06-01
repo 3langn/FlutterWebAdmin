@@ -38,11 +38,11 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
     return Card(
       child: Container(
         color: Colors.grey[100],
-        child:query.isNotEmpty? ListView.separated(
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return
-                ListTile(
+        child: query.isNotEmpty
+            ? ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ListTile(
                     onTap: () {
                       print('aaaaaaaaaaaaa');
                       buildShowInputMajors(scaffoldCtx!, itemList[index]);
@@ -51,14 +51,15 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                         // itemList[index]['majors'],
                         ),
                   );
-          },
-          itemCount: suggestList.length > 5 ? 5 : suggestList.length,
-          separatorBuilder: (context, index) {
-            return Divider(
-              height: 3,
-            );
-          },
-        ),
+                },
+                itemCount: suggestList.length > 5 ? 5 : suggestList.length,
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    height: 3,
+                  );
+                },
+              )
+            : Container(),
       ),
     );
   }

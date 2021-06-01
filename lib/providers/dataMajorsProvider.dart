@@ -28,12 +28,14 @@ class DataMajorsProvider extends ChangeNotifier {
     required String name,
     required String studyTime,
   }) {
-    _listSelectedMajors.add(Majors(
-      grade: grade,
-      idMajors: idMajors,
-      name: name,
-      studyTime: studyTime,
-    ));
+    _listSelectedMajors.add(
+      Majors(
+        grade: grade,
+        idMajors: idMajors,
+        name: name,
+        studyTime: studyTime,
+      ),
+    );
     notifyListeners();
   }
 

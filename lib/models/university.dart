@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'majors.dart';
 
 class University {
@@ -11,11 +13,13 @@ class University {
   final String location;
   final String universityType;
   final String universityUrl;
-  final String id;
+  final String? id;
+
   bool isNationalUniversity;
   double rate;
+
   University({
-    required this.id,
+    this.id,
     required this.name,
     required this.imageUrl,
     this.rate = 10,
@@ -29,4 +33,75 @@ class University {
     required this.universityType,
     required this.universityUrl,
   });
+
+  factory University.fromMap(Map<String, dynamic> mapData) {
+    print(mapData['listMajors']);
+    return University(
+      name: mapData['name'],
+      imageUrl: mapData['imageUrl'],
+      formsOfTraining: mapData['formsOfTraining'],
+      idUniversity: mapData['idUniversity'],
+      isNationalUniversity: mapData['isNationalUniversity'],
+      listMajors: mapData['listMajors'],
+      location: mapData['location'],
+      maxTuition: mapData['maxTuition'].toDouble(),
+      minTuition: mapData['minTuition'].toDouble(),
+      universityType: mapData['universityType'],
+      universityUrl: mapData['universityUrl'],
+    );
+  }
+
+  factory University.fromJson(dynamic jsonData) {
+    return University(
+      name: jsonData['name'],
+      imageUrl: jsonData['imageUrl'],
+      formsOfTraining: jsonData['formsOfTraining'],
+      idUniversity: jsonData['idUniversity'],
+      isNationalUniversity: jsonData['isNationalUniversity'],
+      listMajors: List<Majors>.from(
+          jsonData['listMajors'].map((i) => Majors.fromJson(i))),
+      location: jsonData['location'],
+      maxTuition: jsonData['maxTuition'].toDouble(),
+      minTuition: jsonData['minTuition'].toDouble(),
+      universityType: jsonData['universityType'],
+      universityUrl: jsonData['universityUrl'],
+      id: jsonData.id,
+    );
+  }
+
+  static fromDatabase(List<dynamic> listData) {
+    return List<University>.from(
+        listData.map((jsonData) => University.fromJson(jsonData)));
+  }
+
+  static Map<String, dynamic> toMap(University university) {
+    final mapMajors = university.listMajors
+        .map((majors) => {
+              'nameMajors': majors.name,
+              'idMajors': majors.idMajors,
+              'studyTime': majors.studyTime,
+              'grade': majors.grade,
+            })
+        .toList();
+    final mapData = {
+      'name': university.name,
+      'imageUrl': university.imageUrl,
+      'formsOfTraining': university.formsOfTraining,
+      'idUniversity': university.idUniversity,
+      'isNationalUniversity': university.isNationalUniversity,
+      'listMajors': mapMajors,
+      'location': university.location,
+      'maxTuition': university.maxTuition,
+      'minTuition': university.minTuition,
+      'universityType': university.universityType,
+      'universityUrl': university.universityUrl,
+      'rate': university.rate,
+    };
+    return mapData;
+  }
+
+  static toDataBase(University university) async {
+    final data = toMap(university);
+    await FirebaseFirestore.instance.collection('ListUniversity').add(data);
+  }
 }

@@ -1,4 +1,3 @@
-
 class Majors {
   final String idMajors;
   final String name;
@@ -10,19 +9,21 @@ class Majors {
     required this.name,
     required this.studyTime,
   });
-}
-class IndustryGroups {
-  String? name;
-  List<Majors> _industryGroup;
-  List<Majors> get industryGroup => _industryGroup;
-  IndustryGroups(this._industryGroup);
-  void addIndustryGroup(Majors majors) {
-    _industryGroup.add(majors);
+  static fromJson(dynamic jsonData) {
+    return Majors(
+      grade: jsonData['grade'] as List,
+      idMajors: jsonData['idMajors'] as String,
+      name: jsonData['nameMajors'] as String,
+      studyTime: jsonData['studyTime'] as String,
+    );
   }
-}
 
-class ListMajors {
-  List<IndustryGroups> _listMajors;
-  List<IndustryGroups> get listMajors => _listMajors;
-  ListMajors(this._listMajors);
+  static fromMap(Map<String, Object> mapData) {
+    return Majors(
+      grade: mapData['grade'] as List,
+      idMajors: mapData['idMajors'] as String,
+      name: mapData['nameMajors'] as String,
+      studyTime: mapData['studyTime'] as String,
+    );
+  }
 }

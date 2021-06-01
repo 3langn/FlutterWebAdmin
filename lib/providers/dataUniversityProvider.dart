@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:university_admin/models/majors.dart';
 import 'package:university_admin/models/university.dart';
 
 class DataUniversityProvider extends ChangeNotifier {
@@ -11,62 +10,33 @@ class DataUniversityProvider extends ChangeNotifier {
   University getById(String id) =>
       _listUniversity.firstWhere((element) => element.id == id);
 
-  Future fetchAndSetData() async {
-    List<University> listUniversity = [];
+  Future fetchData({required int count, String? orderBy = 'maxTuition'}) async {
+    late final data;
 
-    late final dataRef;
+    final dataRef = FirebaseFirestore.instance.collection('ListUniversity');
 
     if (_lastDocs == null) {
-      dataRef = await FirebaseFirestore.instance
-          .collection('ListUniversity')
-          .limit(1)
-          .get();
+      data = await dataRef.limit(count).get();
     } else {
-      dataRef = await FirebaseFirestore.instance
-          .collection('ListUniversity')
-          .startAfterDocument(_lastDocs!)
-          .limit(4)
-          .get();
+      data = await dataRef.startAfterDocument(_lastDocs!).limit(10).get();
     }
 
-    _lastDocs = dataRef.docs.last;
+    _lastDocs = await data.docs.last;
+    return data;
+  }
 
-    final listDataUniversity = dataRef.docs;
+  Future fetchAndSetData({int count = 12}) async {
+    final data = await fetchData(count: count);
 
-    listDataUniversity.forEach((element) {
-      final listDataMajors = element['listMajors'];
+    final listDataUniversity = University.fromDatabase(data.docs);
 
-      List<Majors> listMajors = [];
-
-      listDataMajors.forEach((majors) {
-        listMajors.add(Majors(
-          grade: majors['grade'] as List,
-          idMajors: majors['idMajors'] as String,
-          name: majors['nameMajors'] as String,
-          studyTime: majors['studyTime'] as String,
-        ));
-      });
-
-      listUniversity.add(
-        University(
-          name: element['name'],
-          imageUrl: element['imageUrl'],
-          formsOfTraining: element['formsOfTraining'],
-          idUniversity: element['idUniversity'],
-          isNationalUniversity: element['isNationalUniversity'],
-          listMajors: listMajors,
-          location: element['location'],
-          maxTuition: element['maxTuition'],
-          universityType: element['universityType'],
-          minTuition: element['minTuition'],
-          universityUrl: element['universityUrl'],
-          id: element.id,
-        ),
-      );
-    });
-
-    _listUniversity.addAll(listUniversity);
-
+    _listUniversity.addAll(listDataUniversity);
+    //ToDo check data from firebase
+    // listDataUniversity.forEach((element) {
+    //   print(
+    //     element.name + ':' + element.maxTuition.toString(),
+    //   );
+    // });
     notifyListeners();
   }
 }

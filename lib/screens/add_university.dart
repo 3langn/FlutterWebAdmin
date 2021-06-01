@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:university_admin/bloc.navigation_bloc/navigation_bloc.dart';
+import 'package:university_admin/models/university.dart';
 import 'package:university_admin/providers/dataMajorsProvider.dart';
 import 'package:university_admin/services/majors/custom_search_majors.dart';
 import 'package:university_admin/services/majors/input_majors.dart';
@@ -34,33 +34,28 @@ class _AddUniversityState extends State<AddUniversity> {
 
   Future<void> setData() async {
     _form.currentState!.save();
-    final listMajors = Provider.of<DataMajorsProvider>(context, listen: false)
-        .listSelectedMajors;
-    final mapMajors = listMajors
-        .map((majors) => {
-              'nameMajors': majors.name,
-              'idMajors': majors.idMajors,
-              'studyTime': majors.studyTime,
-              'grade': majors.grade,
-            })
-        .toList();
+
+    final listSelectedMajors =
+        Provider.of<DataMajorsProvider>(context, listen: false)
+            .listSelectedMajors;
+
     final university = {
       'name': _tenTruong,
       'imageUrl': _linkAnh,
       'formsOfTraining': _hinhThucDaoTao,
       'idUniversity': _maTruong,
       'isNationalUniversity': isNationalUniversity,
-      'listMajors': mapMajors,
+      'listMajors': listSelectedMajors,
       'location': _diaChi,
       'maxTuition': _maxTuition,
       'minTuition': _minTuition,
       'universityType': _loaiTruong,
       'universityUrl': _linkWeb,
     };
-    await FirebaseFirestore.instance
-        .collection('ListUniversity')
-        .add(university);
-    print('a');
+
+    final data = University.fromMap(university);
+    University.toDataBase(data);
+    _form.currentState!.reset();
   }
 
   @override
