@@ -55,7 +55,7 @@ class _AddUniversityState extends State<AddUniversity> {
 
     final data = University.fromMap(university);
     University.toDataBase(data);
-    _form.currentState!.reset();
+    //_form.currentState!.reset();
   }
 
   @override

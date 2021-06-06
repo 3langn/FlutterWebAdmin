@@ -33,6 +33,19 @@ class University {
     required this.universityType,
     required this.universityUrl,
   });
+  static List keyWord(String name) {
+    List list = [];
+    String temp = "";
+    for (var i = 0; i < name.length; i++) {
+      if (name[i] == " ") {
+        temp = "";
+      } else {
+        temp = temp + name[i];
+        list.add(temp);
+      }
+    }
+    return list;
+  }
 
   factory University.fromMap(Map<String, dynamic> mapData) {
     print(mapData['listMajors']);
@@ -96,6 +109,7 @@ class University {
       'universityType': university.universityType,
       'universityUrl': university.universityUrl,
       'rate': university.rate,
+      'keyword': keyWord(university.name),
     };
     return mapData;
   }
@@ -103,5 +117,6 @@ class University {
   static toDataBase(University university) async {
     final data = toMap(university);
     await FirebaseFirestore.instance.collection('ListUniversity').add(data);
+    print('Done');
   }
 }
