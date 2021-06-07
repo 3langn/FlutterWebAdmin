@@ -38,17 +38,16 @@ class University {
     String temp = "";
     for (var i = 0; i < name.length; i++) {
       if (name[i] == " ") {
-        temp = "";
       } else {
         temp = temp + name[i];
         list.add(temp);
       }
     }
+    list.add(name);
     return list;
   }
 
   factory University.fromMap(Map<String, dynamic> mapData) {
-    print(mapData['listMajors']);
     return University(
       name: mapData['name'],
       imageUrl: mapData['imageUrl'],
