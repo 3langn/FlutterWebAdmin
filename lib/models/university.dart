@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 import 'majors.dart';
 
@@ -34,16 +35,28 @@ class University {
     required this.universityUrl,
   });
   static List keyWord(String name) {
+    name = name.capitalize!;
     List list = [];
     String temp = "";
+    String temp2 = "";
+    int count = 0;
+    String temp3 = "";
+
     for (var i = 0; i < name.length; i++) {
-      if (name[i] == " ") {
-      } else {
-        temp = temp + name[i];
-        list.add(temp);
+      temp = temp + name[i];
+      list.add(temp);
+      if (count >= 2) {
+        temp3 = temp3 + name[i];
+        list.add(temp3);
+        if (name[i] == " ") {
+          temp2 = '';
+        } else {
+          temp2 = temp2 + name[i];
+          list.add(temp2);
+        }
       }
+      if (name[i] == " ") count++;
     }
-    list.add(name);
     return list;
   }
 
