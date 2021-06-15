@@ -17,7 +17,7 @@ class Home extends StatelessWidget with NavigationStates {
       body: Center(
         child: Column(
           children: [
-            Text('Xin chào'),
+            Text('Xin chàoooooooooooooooooooooooooooo'),
             CircleAvatar(
               backgroundImage: AssetImage('assets/images/my.jpg'),
               radius: 150,

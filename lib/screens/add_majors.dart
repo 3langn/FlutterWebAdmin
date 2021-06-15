@@ -18,7 +18,6 @@ class _AddMajorsState extends State<AddMajors> {
   int _itemCount = 1;
   List<String?> majorsList = [];
   List<Row> listRow = [];
-  List<TextEditingController> _listCtl = [];
   void _submit() async {
     _form.currentState!.save();
     try {
@@ -29,6 +28,7 @@ class _AddMajorsState extends State<AddMajors> {
             .collection('listMajors')
             .add({
               'majors': majors,
+              'hot': true,
             })
             .then((value) => {
                   print(content),
@@ -49,9 +49,6 @@ class _AddMajorsState extends State<AddMajors> {
       });
       setState(() {
         majorsList.clear();
-        _listCtl.forEach((element) {
-          element.clear();
-        });
         _itemCount = 0;
       });
     } catch (e) {
@@ -89,7 +86,6 @@ class _AddMajorsState extends State<AddMajors> {
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
                       final ctl = TextEditingController();
-                      _listCtl.add(ctl);
                       listRow.add(
                         _buildTextField(ctl, index),
                       );
@@ -162,13 +158,14 @@ class _AddMajorsState extends State<AddMajors> {
   }
 
   Row _buildTextField(TextEditingController ctl, int index) {
+    //Todo add textfield for image url and hot
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: TextFormField(
             validator: (value) {
-              if (ctl.text == null || ctl.text.trim().isEmpty)
+              if (ctl.text.trim().isEmpty)
                 return 'Vui lòng nhập vào trường này';
               return null;
             },
