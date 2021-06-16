@@ -1,9 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:university_admin/ultis/regrex.dart';
 
 const text = """<div>
-<img src="https://images.idgesg.net/images/article/2018/10/artificial-intelligence_brain_machine-learning_digital-transformation_world-networking-100777429-large.jpg" width="500" height="200">
 <p style="text-align: justify;"><strong><a title="Công nghệ thông tin" href="">Công nghệ thông tin</a> (Tin học ứng dụng) là gì?</strong></p>
 <p style="text-align: justify;">Ngành <span style='color: rgb(255, 0, 0);'>Công nghệ thông tin</span>   là 1 ngành nghề rộng lớn, bao gồm nhiều lĩnh vực, có ảnh hưởng tới nhiều ngành nghề khác nhau của xã hội. Bạn có thể tạm hiểu: <a title="Công nghệ thông tin" href="http://tuyensinhvov.edu.vn/nganh_cong_nghe_thong_tin/">Công nghệ thông tin</a> là 1 ngành sử dụng hệ thống các thiết bị và máy tính, bao gồm phần cứng, phần mềm, để cung cấp giải pháp xử lý thông tin trên nền công nghệ cho các cá nhân, tổ chức có yêu cầu.
 Tin học ứng dụng là một trong các cách gọi của ngành <a title="Công nghệ thông tin" href="">Công nghệ thông tin</a>.</p>
@@ -61,55 +61,74 @@ class Emulation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    print(size.width);
+
     return Expanded(
       flex: 3,
-      child: LayoutBuilder(
-        builder: (context, builder) {
-          return Stack(
-            alignment: Alignment.topRight,
-            children: [
-              SizedBox(
-                width: builder.maxWidth * 0.7,
-                child: Image.asset(
-                  'assets/images/iphoneEmulator.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: 50,
-                right: 75,
-                child: Container(
-                  color: Colors.white,
-                  height: builder.maxHeight * 0.87,
-                  width: builder.maxWidth * 0.472,
-                  child: SingleChildScrollView(
-                    child: Stack(
-                      children: [
-                        AppBar(
-                          toolbarHeight: kToolbarHeight * 0.92,
-                          title: Text(
-                            'Ngành công nghệ thông tin',
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            10,
-                            kToolbarHeight * 0.92,
-                            10,
-                            0,
-                          ),
-                          child: Html(
-                            data: removeAllHtmlTags(text),
-                          ),
-                        ),
-                      ],
-                    ),
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          SizedBox(
+            width: size.width * 0.26,
+            child: Image.asset(
+              'assets/images/iphoneEmulator.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.055,
+            right: size.height * 0.089,
+            child: Container(
+              height: size.height * 0.77,
+              width: size.width * 0.173,
+              child: Padding(
+                padding: EdgeInsets.only(top: size.height * 0.68 * 1 / 12),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 2),
+                  child: Container(
+                    color: Colors.white,
+                    child: Html(data: removeAllHtmlTags(text)),
                   ),
                 ),
-              )
-            ],
-          );
-        },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class EmulationAppBar extends StatelessWidget {
+  const EmulationAppBar({
+    Key? key,
+    required this.size,
+  }) : super(key: key);
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: 20),
+      height: size.height * 0.68 * 1 / 10,
+      width: size.width * 0.21,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: Offset(1, 2), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Text(
+        'Ngành Công nghệ thông tin',
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
     );
   }
