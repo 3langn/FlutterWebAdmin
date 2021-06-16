@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:university_admin/screens/add_majors.dart';
+import 'package:university_admin/screens/add_major/add_majors.dart';
 import 'package:university_admin/screens/add_university.dart';
 import 'package:university_admin/screens/home.dart';
 
