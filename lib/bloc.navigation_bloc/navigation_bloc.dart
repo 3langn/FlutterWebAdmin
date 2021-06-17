@@ -20,7 +20,7 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
         yield Home();
         break;
       case NavigationEvents.AddMajorsClickedEvent:
-        yield AddMajors();
+        yield AddMajorsScreen();
         break;
       case NavigationEvents.AddUniversityClickedEvent:
         yield AddUniversity();

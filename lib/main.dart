@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:university_admin/providers/dataMajorsProvider.dart';
 import 'package:university_admin/providers/dataUniversityProvider.dart';
-import 'package:university_admin/screens/add_major/add_majors.dart';
+import 'package:university_admin/routes/app_pages.dart';
 import 'package:university_admin/screens/add_university.dart';
 
 void main() async {
@@ -39,11 +39,11 @@ class MyApp extends StatelessWidget {
           ),
           canvasColor: Colors.white,
         ),
-        home: AddMajors(),
+        initialRoute: AppPages.INITIAL,
         routes: {
           AddUniversity.routeName: (context) => AddUniversity(),
-          AddMajors.routeName: (context) => AddMajors(),
         },
+        getPages: AppPages.routes,
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:get/get.dart';
+import 'package:university_admin/screens/add_major/controllers/add_major_controller.dart';
 import 'package:university_admin/ultis/regrex.dart';
 
 const text = """<div>
@@ -62,8 +64,6 @@ class Emulation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print(size.width);
-
     return Expanded(
       flex: 3,
       child: Stack(
@@ -76,22 +76,16 @@ class Emulation extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          Positioned(
-            top: size.height * 0.055,
-            right: size.height * 0.089,
+          Padding(
+            padding: EdgeInsets.only(
+              top: size.height * 0.125,
+              right: size.width * 0.044,
+            ),
             child: Container(
-              height: size.height * 0.77,
+              color: Colors.white,
+              height: size.width * 0.35,
               width: size.width * 0.173,
-              child: Padding(
-                padding: EdgeInsets.only(top: size.height * 0.68 * 1 / 12),
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 2),
-                  child: Container(
-                    color: Colors.white,
-                    child: Html(data: removeAllHtmlTags(text)),
-                  ),
-                ),
-              ),
+              child: EmulationScreen(),
             ),
           )
         ],
@@ -100,29 +94,67 @@ class Emulation extends StatelessWidget {
   }
 }
 
-class EmulationAppBar extends StatelessWidget {
-  const EmulationAppBar({
+class EmulationScreen extends StatelessWidget {
+  EmulationScreen({
     Key? key,
-    required this.size,
+  }) : super(key: key);
+  final controller = Get.find<AddMajorController>();
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: size.height * 0.68 * 1 / 12),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 2),
+            child: Obx(
+              () {
+                return Column(
+                  children: [
+                    Image.network(
+                      controller.imageUrl.value,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const SizedBox();
+                      },
+                    ),
+                    Html(data: removeAllHtmlTags(controller.codeHtml.value)),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+        EmulationAppBar(),
+      ],
+    );
+  }
+}
+
+class EmulationAppBar extends StatelessWidget {
+  EmulationAppBar({
+    Key? key,
   }) : super(key: key);
 
-  final Size size;
+  final Size size = Get.size;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.only(left: 20),
-      height: size.height * 0.68 * 1 / 10,
+      height: size.height * 0.68 * 1 / 12,
       width: size.width * 0.21,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
-            blurRadius: 4,
-            offset: Offset(1, 2), // changes position of shadow
+            blurRadius: 2,
+            offset: Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
