@@ -42,11 +42,13 @@ class AddUniversity extends GetView<AddUniversityController>
                     Row(
                       children: [
                         Text('Là đại học quốc gia ?'),
-                        Switch(
-                          value: controller.isNationalUniversity.value,
-                          onChanged: (value) {
-                            controller.isNationalUniversity.value = value;
-                          },
+                        Obx(
+                          () => Switch(
+                            value: controller.isNationalUniversity.value,
+                            onChanged: (value) {
+                              controller.isNationalUniversity.value = value;
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -56,36 +58,37 @@ class AddUniversity extends GetView<AddUniversityController>
                         scaffoldCtx: context,
                       ),
                     ),
-                    Visibility(
-                      visible: controller.listMajorsSelected.isNotEmpty,
-                      child: Column(
-                        children: [
-                          Text('Ngành đã thêm :' +
-                              '${controller.listMajorsSelected.length}'),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) => Container(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '${index + 1}.' +
-                                        controller
-                                            .listMajorsSelected[index].name,
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.clear),
-                                    onPressed: () {
-                                      controller.removeMajor(
-                                        controller.listMajorsSelected[index],
-                                      );
-                                    },
-                                  )
-                                ],
+                    Obx(
+                      () => Visibility(
+                        visible: controller.listMajorsSelected.isNotEmpty,
+                        child: Column(
+                          children: [
+                            Text('Ngành đã thêm :' +
+                                '${controller.listMajorsSelected.length}'),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => Container(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '${index + 1}.' +
+                                          controller.listMajorsSelected[index],
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () {
+                                        controller.removeMajor(
+                                          controller.listMajorsSelected[index],
+                                        );
+                                      },
+                                    )
+                                  ],
+                                ),
                               ),
+                              itemCount: controller.listMajorsSelected.length,
                             ),
-                            itemCount: controller.listMajorsSelected.length,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     TextFormField(
@@ -104,6 +107,11 @@ class AddUniversity extends GetView<AddUniversityController>
                     TextFormField(
                       decoration: InputDecoration(labelText: 'Địa chỉ'),
                       onSaved: (value) => controller.diaChi = value!,
+                    ),
+                    TextFormField(
+                      decoration:
+                          InputDecoration(labelText: 'Loai truong (cong,tu..)'),
+                      onSaved: (value) => controller.universityType = value!,
                     ),
                     TextFormField(
                       decoration: InputDecoration(

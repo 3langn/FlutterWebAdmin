@@ -8,7 +8,9 @@ class MajorInfo {
     required this.year,
     required this.name,
     required this.code,
+    required this.id,
   });
+  final String? id;
   final String? imageUniUrl;
   final String name;
   final List<String>? grades;
@@ -23,11 +25,13 @@ class MajorInfo {
       'year': majorInfo.year,
       'name': majorInfo.name,
       'code': majorInfo.code,
+      'id': majorInfo.id,
     };
   }
 
   factory MajorInfo.fromJson(dynamic json) {
     return MajorInfo(
+      id: json['id'],
       grades: json['grades'],
       score: json['score'],
       year: json['year'],
@@ -58,6 +62,7 @@ class Major extends Info {
         );
 
   factory Major.fromJson(dynamic json) {
+    print('fromJson - Major Model');
     return Major(
       codeHtml: json['codeHtml'],
       imageUrl: json['imageUrl'],

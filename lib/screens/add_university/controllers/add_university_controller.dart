@@ -7,10 +7,13 @@ import 'package:university_admin/ultis/constants.dart';
 
 class AddUniversityController extends GetxController {
   final form = GlobalKey<FormState>();
+  var gradesSelected = [].obs;
+  late List majorsId = [];
   late String tenTruong;
   late String maTruong;
-  late double minTuition;
-  late double maxTuition;
+  late String universityType;
+  double minTuition = 0;
+  double maxTuition = 0;
   late String diaChi; //todo check this
   late String linkWeb;
   late String linkAnh;
@@ -25,44 +28,28 @@ class AddUniversityController extends GetxController {
     print(listMajors.toString() + ' - Add UniversityController');
   }
 
-  Future<void> setData() async {
+  Future setData() async {
+    print('setData - adduniver_controller');
     form.currentState!.save();
     final university = {
       'name': tenTruong,
       'imageUrl': linkAnh,
       'idUniversity': maTruong,
-      'isNationalUniversity': isNationalUniversity,
-      'listMajors': listMajorsSelected,
+      'isNationalUniversity': isNationalUniversity.value,
+      'idMajors': ['aaaaaaa'], //majorsId as List<String>,
       'location': diaChi,
       'maxTuition': maxTuition,
       'minTuition': minTuition,
       'universityUrl': linkWeb,
+      'universityType': universityType,
     };
-
     final data = UniversityInfo.fromMap(university);
     UniversityInfo.toDataBase(data);
     //_form.currentState!.reset();
   }
 
-  void addMajor({
-    required List<String> grades,
-    required double score,
-    required String name,
-    required String code,
-  }) async {
-    final fb = FirebaseFirestore.instance;
-    final ref = fb.collection(FirebaseCollection.MAJOR);
-    ref.add(
-      MajorInfo.toMap(
-        MajorInfo(
-          grades: grades,
-          score: score,
-          year: DateTime.now().year,
-          name: name,
-          code: code,
-        ),
-      ),
-    );
+  void addMajor({required String name}) {
+    listMajorsSelected.add(name);
   }
 
   void removeMajor(MajorInfo majorInfo) {}

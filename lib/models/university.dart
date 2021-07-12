@@ -4,15 +4,15 @@ import 'package:university_admin/ultis/constants.dart';
 import 'info.dart';
 
 class UniversityInfo extends Info {
-  final List<String> idMajors;
+  final List idMajors;
   final String? idUniversity;
-  final String code;
+  final String? code;
   final String? id;
-  final double minTuition;
-  final double maxTuition;
-  final String location;
-  final String universityType;
-  final String universityUrl;
+  final double? minTuition;
+  final double? maxTuition;
+  final String? location;
+  final String? universityType;
+  final String? universityUrl;
   bool isNationalUniversity;
   double rate;
 
@@ -50,7 +50,7 @@ class UniversityInfo extends Info {
       minTuition: mapData['minTuition'].toDouble(),
       universityType: mapData['universityType'],
       universityUrl: mapData['universityUrl'],
-      rate: mapData['rate'],
+      rate: 10,
       description: mapData['description'],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:university_admin/models/majors.dart';
 import 'package:university_admin/screens/add_university/controllers/add_university_controller.dart';
 
 import 'custom_search_majors.dart';
@@ -37,17 +38,17 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
           element.name.toLowerCase().startsWith(query.toLowerCase()))
     ];
     print(suggestList[0].name + ' - input major');
-    return Card(
-      child: Container(
-        color: Colors.grey[100],
-        child: Visibility(
-          visible: query.isNotEmpty,
+    return Visibility(
+      visible: query.isNotEmpty && suggestList.isNotEmpty,
+      child: Card(
+        child: Container(
+          color: Colors.grey[100],
           child: ListView.separated(
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  buildShowInputMajors(scaffoldCtx!, suggestList[index].name);
+                  buildShowInputMajors(scaffoldCtx!, suggestList[index]);
                 },
                 title: Text(suggestList[index].name),
               );
@@ -64,29 +65,29 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
     );
   }
 
-  Future buildShowInputMajors(BuildContext scaffoldCtx, String nameMajor) {
-    List<String> gradesSelected = [];
+  Future buildShowInputMajors(BuildContext scaffoldCtx, Major major) {
     final focus = FocusNode();
 
-    final codeMajorController = TextEditingController();
     final scoreController = TextEditingController();
     final codeController = TextEditingController();
     final gradesController = TextEditingController();
 
     void addListSelected() {
       if (gradesController.text.isNotEmpty) {
-        gradesSelected.add(gradesController.text);
+        controller.gradesSelected.add(gradesController.text);
         gradesController.clear();
         focus.unfocus();
       }
     }
 
     void submit() {
+      print('${major.id} - in-put major');
+      controller.majorsId.add(major.id);
       controller.addMajor(
-        name: nameMajor,
-        score: double.parse(scoreController.text),
-        grades: gradesSelected,
-        code: codeMajorController.text,
+        name: major.name,
+        // score: double.parse(scoreController.text),
+        // grades: gradesSelected,
+        // code: codeController.text,
       );
       Navigator.pop(scaffoldCtx);
     }
@@ -105,9 +106,9 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                     'Điền thông tin ngành',
                     style: Theme.of(scaffoldCtx).textTheme.headline6,
                   ),
-                  Text('Tên Ngành : $nameMajor'),
+                  Text('Tên Ngành : ${major.name}'),
                   TextFormField(
-                    controller: codeMajorController,
+                    controller: codeController,
                     decoration: InputDecoration(
                       labelText: 'Nhập mã ngành',
                     ),
@@ -133,11 +134,11 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                       )
                     ],
                   ),
-                  _buildTags(gradesSelected),
+                  Tag(),
                   TextFormField(
-                    controller: codeController,
+                    controller: scoreController,
                     decoration: InputDecoration(
-                      labelText: 'Nhập mã ngành ',
+                      labelText: 'Nhập điểm sàn ',
                     ),
                   ),
                   SizedBox(height: 30),
@@ -155,27 +156,33 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
       },
     );
   }
+}
 
-  Container _buildTags(List<String> khoiDaChon) {
+class Tag extends StatelessWidget {
+  final controller = Get.find<AddUniversityController>();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxHeight: 100),
-      child: GridView.builder(
-        itemBuilder: (context, index) {
-          return _Chip(
-            label: khoiDaChon[index],
-            onDeleted: (index) {},
-            index: index,
-          );
-        },
-        itemCount: khoiDaChon.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 4 / 2,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
-        ),
-      ),
-    );
+        constraints: BoxConstraints(maxHeight: 100),
+        child: Obx(
+          () => GridView.builder(
+            itemBuilder: (context, index) {
+              return _Chip(
+                label: controller.gradesSelected[index],
+                onDeleted: (index) {},
+                index: index,
+              );
+            },
+            itemCount: controller.gradesSelected.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              childAspectRatio: 4 / 2,
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 0,
+            ),
+          ),
+        ));
   }
 }
 
