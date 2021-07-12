@@ -2,10 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:university_admin/providers/dataMajorsProvider.dart';
 import 'package:university_admin/providers/dataUniversityProvider.dart';
 import 'package:university_admin/routes/app_pages.dart';
-import 'package:university_admin/screens/add_university.dart';
+import 'package:university_admin/screens/add_university/add_university.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +17,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => DataMajorsProvider(),
-        ),
         ChangeNotifierProvider(
           create: (context) => DataUniversityProvider(),
         ),
@@ -39,7 +35,7 @@ class MyApp extends StatelessWidget {
           ),
           canvasColor: Colors.white,
         ),
-        initialRoute: AppPages.INITIAL,
+        home: AddUniversity(), //AppPages.INITIAL,
         routes: {
           AddUniversity.routeName: (context) => AddUniversity(),
         },

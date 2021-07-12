@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:university_admin/providers/dataMajorsProvider.dart';
 
 class NganhDaCo extends StatelessWidget {
   const NganhDaCo({
@@ -26,21 +24,6 @@ class NganhDaCo extends StatelessWidget {
                 fontSize: 26,
               ),
             ),
-            Consumer<DataMajorsProvider>(builder: (context, data, ch) {
-              return ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(data.listDataMajors[index]),
-                  );
-                },
-                itemCount: data.listDataMajors.length,
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider();
-                },
-              );
-            }),
           ],
         ),
       ),

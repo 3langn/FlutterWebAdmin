@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:university_admin/models/university.dart';
 
 class DataUniversityProvider extends ChangeNotifier {
-  List<University> _listUniversity = [];
-  List<University> get listUniversity => _listUniversity;
+  List<UniversityInfo> _listUniversity = [];
+  List<UniversityInfo> get listUniversity => _listUniversity;
   DocumentSnapshot<Object?>? _lastDocs;
 
-  University getById(String id) =>
+  UniversityInfo getById(String id) =>
       _listUniversity.firstWhere((element) => element.id == id);
 
   Future fetchData({required int count, String? orderBy = 'maxTuition'}) async {
@@ -28,7 +28,7 @@ class DataUniversityProvider extends ChangeNotifier {
   Future fetchAndSetData({int count = 12}) async {
     final data = await fetchData(count: count);
 
-    final listDataUniversity = University.fromDatabase(data.docs);
+    final listDataUniversity = UniversityInfo.fromFirebase(data.docs);
 
     _listUniversity.addAll(listDataUniversity);
     //ToDo check data from firebase

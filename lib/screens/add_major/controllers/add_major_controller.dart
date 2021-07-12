@@ -11,7 +11,6 @@ class AddMajorController extends GetxController {
   var isHot = false.obs;
   FirebaseService firebaseService = FirebaseService();
   Map<String, dynamic> _toMap() {
-    //
     return {
       'codeHtml': removeAllHtmlTags(codeHtml.value),
       'imageUrl': imageUrl.value,

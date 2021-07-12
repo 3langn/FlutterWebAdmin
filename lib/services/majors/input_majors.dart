@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:university_admin/providers/dataMajorsProvider.dart';
+import 'package:get/get.dart';
+import 'package:university_admin/screens/add_university/controllers/add_university_controller.dart';
 
 import 'custom_search_majors.dart';
 
 class SearchMajorsDelegate extends CustomSearchDelegate<String> {
   SearchMajorsDelegate({
-    required this.itemList,
     required String? hintText,
     required this.scaffoldCtx,
   }) : super(
           searchFieldLabel: hintText,
         );
-  final List<String> itemList;
   final BuildContext? scaffoldCtx;
+  final controller = Get.find<AddUniversityController>();
   @override
   List<Widget> buildActions(BuildContext context) {
     return [Container()];
@@ -31,60 +30,63 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    final controller = Get.find<AddUniversityController>();
+
     final suggestList = [
-      ...itemList.where(
-          (element) => element.toLowerCase().startsWith(query.toLowerCase()))
+      ...controller.listMajors.where((element) =>
+          element.name.toLowerCase().startsWith(query.toLowerCase()))
     ];
+    print(suggestList[0].name + ' - input major');
     return Card(
       child: Container(
         color: Colors.grey[100],
-        child: query.isNotEmpty
-            ? ListView.separated(
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () {
-                      print('aaaaaaaaaaaaa');
-                      buildShowInputMajors(scaffoldCtx!, itemList[index]);
-                    },
-                    title: Text(suggestList[index]
-                        // itemList[index]['majors'],
-                        ),
-                  );
+        child: Visibility(
+          visible: query.isNotEmpty,
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                  buildShowInputMajors(scaffoldCtx!, suggestList[index].name);
                 },
-                itemCount: suggestList.length > 5 ? 5 : suggestList.length,
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    height: 3,
-                  );
-                },
-              )
-            : Container(),
+                title: Text(suggestList[index].name),
+              );
+            },
+            itemCount: suggestList.length > 5 ? 5 : suggestList.length,
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 3,
+              );
+            },
+          ),
+        ),
       ),
     );
   }
 
-  Future buildShowInputMajors(BuildContext scaffoldCtx, String nameMajors) {
-    List<String> khoiDaChon = [];
-    final idMajorsCtl = TextEditingController();
-    final studyTimeMajorsCtl = TextEditingController();
-    final khoiThiCtl = TextEditingController();
+  Future buildShowInputMajors(BuildContext scaffoldCtx, String nameMajor) {
+    List<String> gradesSelected = [];
+    final focus = FocusNode();
 
-    void addListSelected(
-        TextEditingController textEditCtl, List list, FocusNode focus) {
-      if (textEditCtl.text.isNotEmpty) {
-        list.add(textEditCtl.text);
-        textEditCtl.clear();
+    final codeMajorController = TextEditingController();
+    final scoreController = TextEditingController();
+    final codeController = TextEditingController();
+    final gradesController = TextEditingController();
+
+    void addListSelected() {
+      if (gradesController.text.isNotEmpty) {
+        gradesSelected.add(gradesController.text);
+        gradesController.clear();
         focus.unfocus();
       }
     }
 
     void submit() {
-      Provider.of<DataMajorsProvider>(scaffoldCtx, listen: false).addMajors(
-        grade: khoiDaChon,
-        idMajors: idMajorsCtl.text,
-        name: nameMajors,
-        studyTime: studyTimeMajorsCtl.text,
+      controller.addMajor(
+        name: nameMajor,
+        score: double.parse(scoreController.text),
+        grades: gradesSelected,
+        code: codeMajorController.text,
       );
       Navigator.pop(scaffoldCtx);
     }
@@ -92,7 +94,6 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
     return showModalBottomSheet(
       context: scaffoldCtx,
       builder: (scaffoldCtx) {
-        final focus = FocusNode();
         return Container(
           padding: EdgeInsets.all(20),
           height: 800,
@@ -104,9 +105,9 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                     'Điền thông tin ngành',
                     style: Theme.of(scaffoldCtx).textTheme.headline6,
                   ),
-                  Text('Tên Ngành : $nameMajors'),
+                  Text('Tên Ngành : $nameMajor'),
                   TextFormField(
-                    controller: idMajorsCtl,
+                    controller: codeMajorController,
                     decoration: InputDecoration(
                       labelText: 'Nhập mã ngành',
                     ),
@@ -117,10 +118,10 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                       Expanded(
                         child: TextField(
                           onSubmitted: (_) {
-                            addListSelected(khoiThiCtl, khoiDaChon, focus);
+                            addListSelected();
                           },
                           focusNode: focus,
-                          controller: khoiThiCtl,
+                          controller: gradesController,
                           decoration: InputDecoration(
                             labelText: 'Nhập khối thi',
                           ),
@@ -128,19 +129,15 @@ class SearchMajorsDelegate extends CustomSearchDelegate<String> {
                       ),
                       IconButton(
                         icon: Icon(Icons.add),
-                        onPressed: () => addListSelected(
-                          khoiThiCtl,
-                          khoiDaChon,
-                          focus,
-                        ),
+                        onPressed: () => addListSelected(),
                       )
                     ],
                   ),
-                  _buildTags(khoiDaChon),
+                  _buildTags(gradesSelected),
                   TextFormField(
-                    controller: studyTimeMajorsCtl,
+                    controller: codeController,
                     decoration: InputDecoration(
-                      labelText: 'Nhập thời gian đào tạo',
+                      labelText: 'Nhập mã ngành ',
                     ),
                   ),
                   SizedBox(height: 30),

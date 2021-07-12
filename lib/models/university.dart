@@ -1,134 +1,106 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
+import 'package:university_admin/ultis/constants.dart';
 
-import 'majors.dart';
+import 'info.dart';
 
-class University {
-  final String imageUrl;
-  final List<Majors> listMajors;
-  final String formsOfTraining;
-  final String name;
-  final String idUniversity;
+class UniversityInfo extends Info {
+  final List<String> idMajors;
+  final String? idUniversity;
+  final String code;
+  final String? id;
   final double minTuition;
   final double maxTuition;
   final String location;
   final String universityType;
   final String universityUrl;
-  final String? id;
-
   bool isNationalUniversity;
   double rate;
 
-  University({
+  UniversityInfo({
+    required name,
+    required imageUrl,
+    required description,
     this.id,
-    required this.name,
-    required this.imageUrl,
     this.rate = 10,
-    required this.formsOfTraining,
-    required this.idUniversity,
+    this.idUniversity,
+    required this.code,
     required this.isNationalUniversity,
-    required this.listMajors,
+    required this.idMajors,
     required this.location,
     required this.maxTuition,
     required this.minTuition,
     required this.universityType,
     required this.universityUrl,
-  });
-  static List keyWord(String name) {
-    name = name.capitalize!;
-    List list = [];
-    String temp = "";
-    String temp2 = "";
-    int count = 0;
-    String temp3 = "";
+  }) : super(
+          name: name,
+          imageUrl: imageUrl,
+          description: description,
+        );
 
-    for (var i = 0; i < name.length; i++) {
-      temp = temp + name[i];
-      list.add(temp);
-      if (count >= 2) {
-        temp3 = temp3 + name[i];
-        list.add(temp3);
-        if (name[i] == " ") {
-          temp2 = '';
-        } else {
-          temp2 = temp2 + name[i];
-          list.add(temp2);
-        }
-      }
-      if (name[i] == " ") count++;
-    }
-    return list;
-  }
-
-  factory University.fromMap(Map<String, dynamic> mapData) {
-    return University(
+  factory UniversityInfo.fromMap(Map<String, dynamic> mapData) {
+    return UniversityInfo(
+      code: mapData['code'],
       name: mapData['name'],
       imageUrl: mapData['imageUrl'],
-      formsOfTraining: mapData['formsOfTraining'],
       idUniversity: mapData['idUniversity'],
       isNationalUniversity: mapData['isNationalUniversity'],
-      listMajors: mapData['listMajors'],
+      idMajors: mapData['idMajors'],
       location: mapData['location'],
       maxTuition: mapData['maxTuition'].toDouble(),
       minTuition: mapData['minTuition'].toDouble(),
       universityType: mapData['universityType'],
       universityUrl: mapData['universityUrl'],
+      rate: mapData['rate'],
+      description: mapData['description'],
     );
   }
 
-  factory University.fromJson(dynamic jsonData) {
-    return University(
+  factory UniversityInfo.fromJson(dynamic jsonData) {
+    return UniversityInfo(
+      code: jsonData['code'],
       name: jsonData['name'],
       imageUrl: jsonData['imageUrl'],
-      formsOfTraining: jsonData['formsOfTraining'],
       idUniversity: jsonData['idUniversity'],
       isNationalUniversity: jsonData['isNationalUniversity'],
-      listMajors: List<Majors>.from(
-          jsonData['listMajors'].map((i) => Majors.fromJson(i))),
+      idMajors: jsonData['idMajors'],
       location: jsonData['location'],
       maxTuition: jsonData['maxTuition'].toDouble(),
       minTuition: jsonData['minTuition'].toDouble(),
       universityType: jsonData['universityType'],
       universityUrl: jsonData['universityUrl'],
+      rate: jsonData['rate'].toDouble(),
+      description: jsonData['description'],
       id: jsonData.id,
     );
   }
 
-  static fromDatabase(List<dynamic> listData) {
-    return List<University>.from(
-        listData.map((jsonData) => University.fromJson(jsonData)));
+  static fromFirebase(List<dynamic> listData) {
+    return List<UniversityInfo>.from(
+        listData.map((jsonData) => UniversityInfo.fromJson(jsonData)));
   }
 
-  static Map<String, dynamic> toMap(University university) {
-    final mapMajors = university.listMajors
-        .map((majors) => {
-              'nameMajors': majors.name,
-              'idMajors': majors.idMajors,
-              'studyTime': majors.studyTime,
-              'grade': majors.grade,
-            })
-        .toList();
+  static toMap(UniversityInfo university) {
     final mapData = {
       'name': university.name,
       'imageUrl': university.imageUrl,
-      'formsOfTraining': university.formsOfTraining,
       'idUniversity': university.idUniversity,
       'isNationalUniversity': university.isNationalUniversity,
-      'listMajors': mapMajors,
+      'idMajors': university.idMajors,
       'location': university.location,
       'maxTuition': university.maxTuition,
       'minTuition': university.minTuition,
       'universityType': university.universityType,
       'universityUrl': university.universityUrl,
       'rate': university.rate,
-      'keyword': keyWord(university.name),
     };
+
     return mapData;
   }
 
-  static toDataBase(University university) async {
+  static toDataBase(UniversityInfo university) async {
     final data = toMap(university);
-    await FirebaseFirestore.instance.collection('ListUniversity').add(data);
-    print('Done');
+    await FirebaseFirestore.instance
+        .collection(FirebaseCollection.UNIVERSITY)
+        .add(data);
   }
 }
